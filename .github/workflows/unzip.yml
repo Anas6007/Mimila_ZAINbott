@@ -1,0 +1,27 @@
+name: Unzip Files
+
+on:
+  push:
+    paths:
+      - '**.zip'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Unzip files
+        run: |
+          mkdir -p extracted_files
+          unzip "*.zip" -d extracted_files
+          rm -f *.zip  # حذف الملفات المضغوطة بعد فكها
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add extracted_files
+          git commit -m "Unzipped files"
+          git push
